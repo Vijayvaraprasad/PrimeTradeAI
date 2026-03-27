@@ -1,140 +1,102 @@
-# 🚀 PrimeTradeAI — Trader Behavior & Market Sentiment Insights
+# PrimeTradeAI — Trader Behavior & Market Sentiment Insights
 
-> **Exploring the relationship between Hyperliquid trader performance and the Bitcoin Fear & Greed Index to uncover actionable trading strategies.**
+## Overview
 
-[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Complete-brightgreen?style=flat-square)]()
+This project analyzes 211,224 trades from 32 Hyperliquid traders across 246 crypto assets, cross-referenced with the Bitcoin Fear & Greed Index (2,644 daily observations from Feb 2018 to May 2025).
 
----
+The goal is to explore how market sentiment (fear vs greed) affects trader behavior and profitability, uncover hidden patterns in trading data, and propose actionable strategies based on the findings.
 
-## 📋 Assignment Overview
 
-This project analyzes **211,224 trades** from **32 Hyperliquid traders** across **246 crypto assets**, cross-referenced with the **Bitcoin Fear & Greed Index** (2,644 daily observations from Feb 2018 – May 2025), to:
+## Datasets
 
-1. **Explore** the relationship between trader performance and market sentiment
-2. **Uncover** hidden behavioral patterns and trading archetypes
-3. **Deliver** actionable insights for smarter trading strategies
+- **Bitcoin Fear & Greed Index** — Daily sentiment classification (Extreme Fear, Fear, Neutral, Greed, Extreme Greed) with numerical values
+- **Hyperliquid Historical Trades** — Individual trade records including account, coin, execution price, size, side (buy/sell), closed PnL, fees, timestamps
 
----
 
-## 📊 Key Findings
+## Key Findings
 
-### 🎯 Sentiment-Performance Relationship
-- Trader PnL varies significantly across sentiment regimes (statistically verified via ANOVA)
-- **Win rates shift** based on Fear/Greed classification — certain regimes systematically favor profitable trades
-- **Position sizing** behavior changes with sentiment — traders adjust size based on market mood
+**Sentiment and Profitability:**
+- Traders perform best during Extreme Greed periods, averaging $67.89 PnL per trade
+- Neutral sentiment shows the weakest performance at $34.31 average PnL
+- Win rates are highest during Extreme Greed (89.2%) and lowest during Extreme Fear (76.2%)
 
-### 🔄 Contrarian Behavior Detected
-- Buy ratios increase during Fear periods, suggesting professional contrarian behavior
-- Sentiment **momentum** (direction of FG change) is a stronger predictor than sentiment level alone
+**Contrarian Behavior:**
+- Buy ratios shift meaningfully across sentiment levels — certain traders increase buying during Fear periods, a classic contrarian pattern
+- Sentiment momentum (direction of index change) is a stronger predictor of PnL than the sentiment level itself
 
-### 🧬 Three Trader Archetypes Identified (K-Means Clustering)
-| Cluster | Archetype | Description |
-|---------|-----------|-------------|
-| 0 | 🧪 Experimental | Varied strategies, moderate risk |
-| 1 | 🐋 Whales | High-volume, large positions |
-| 2 | 📊 Moderate | Consistent, smaller positions |
+**Trader Segments (K-Means Clustering):**
+Three distinct trader archetypes were identified through behavioral clustering:
+- A large group of 19 traders with moderate activity and average returns
+- A small group of 5 high-PnL traders with lower win rates but larger gains per trade
+- A group of 8 diversified traders active across many coins with moderate results
 
-### ⏰ Temporal Patterns
-- Trading activity peaks during specific IST hours
-- Day-of-week effects on profitability identified
+**Temporal Patterns:**
+- Trading activity and profitability vary by hour and day of week
+- BTC dominates volume at $644M, followed by HYPE and SOL
 
----
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 PrimeTradeAI/
-├── fear_greed_index.csv          # Bitcoin Fear & Greed Index dataset
-├── historical_data.csv           # Hyperliquid trader data (211K trades)
-├── analysis.py                   # Complete analysis pipeline
-├── dashboard.html                # Interactive web dashboard
-├── README.md                     # This file
-└── output/
-    ├── 01_eda_overview.png       # EDA visualizations
-    ├── 02_top_traders.png        # Top trader analysis
-    ├── 03_performance_vs_sentiment.png  # PnL, win rate, size by sentiment
-    ├── 04_hidden_patterns.png    # Contrarian & temporal patterns
-    ├── 05_trader_clustering.png  # K-Means behavioral segmentation
-    ├── 06_advanced_analysis.png  # Sentiment momentum & risk-return
-    ├── 07_trader_sentiment_heatmap.png  # Individual trader × sentiment matrix
-    ├── 08_position_analysis.png  # Position sizing & direction bias
-    ├── 09_key_insights.png       # Summary of findings
-    ├── dashboard_data.json       # Data for interactive dashboard
-    ├── insights.json             # Key metrics JSON
-    └── trader_features.csv       # Engineered trader features
+    fear_greed_index.csv          -- Bitcoin sentiment data
+    historical_data.csv           -- Hyperliquid trade data
+    analysis.py                   -- Full analysis pipeline
+    dashboard.html                -- Interactive web dashboard
+    README.md
+    output/
+        01_eda_overview.png       -- Exploratory data analysis charts
+        02_top_traders.png        -- Top trader analysis
+        03_performance_vs_sentiment.png
+        04_hidden_patterns.png    -- Contrarian and temporal patterns
+        05_trader_clustering.png  -- K-Means segmentation
+        06_advanced_analysis.png  -- Sentiment momentum and risk-return
+        07_trader_sentiment_heatmap.png
+        08_position_analysis.png
+        09_key_insights.png
+        dashboard_data.json       -- Data for interactive dashboard
+        insights.json
+        trader_features.csv       -- Engineered trader features
 ```
 
----
 
-## 🚀 Quick Start
+## How to Run
 
-### Prerequisites
-```bash
+Install dependencies:
+```
 pip install pandas numpy matplotlib seaborn scikit-learn scipy
 ```
 
-### Run Analysis
-```bash
+Run the analysis:
+```
 python analysis.py
 ```
-This generates all charts in `./output/` and prepares data for the dashboard.
+This generates all charts in the output folder and prepares data for the dashboard.
 
-### View Interactive Dashboard
-Open `dashboard.html` in a browser (requires a local server for JSON loading):
-```bash
-python -m http.server 8080
-# Then visit http://localhost:8080/dashboard.html
+To view the interactive dashboard, start a local server:
 ```
+python -m http.server 8080
+```
+Then open http://localhost:8080/dashboard.html in your browser.
 
----
 
-## 🔬 Methodology
+## Methodology
 
-### Data Pipeline
-1. **Loading & Cleaning**: Parse timestamps, handle IST timezone, merge datasets on date
-2. **Feature Engineering**: Compute PnL categories, buy ratios, directional bias, sentiment momentum
-3. **Statistical Testing**: ANOVA for PnL differences, Chi-squared for win rate associations
-4. **Unsupervised Learning**: K-Means clustering on trader behavioral features with PCA visualization
-5. **Visualization**: 9 professional chart panels + interactive web dashboard
+1. **Data Preparation** — Parsed timestamps, merged trade data with daily sentiment on date, engineered features like win rate, buy ratio, PnL categories
+2. **Statistical Testing** — One-way ANOVA to test PnL differences across sentiment groups, Chi-squared test for sentiment-profitability association
+3. **Clustering** — K-Means on standardized trader behavioral features (trade count, avg size, PnL, buy ratio, win rate, coin diversity, risk), visualized with PCA
+4. **Visualization** — 9 static chart panels with matplotlib/seaborn, 13+ interactive charts in the web dashboard using Chart.js
 
-### Statistical Methods
-| Method | Purpose | Result |
-|--------|---------|--------|
-| One-way ANOVA | Test PnL differences across sentiment | Reported in analysis output |
-| Chi-squared Test | Test sentiment-profitability association | Reported in analysis output |
-| K-Means Clustering | Identify trader archetypes | 3 distinct clusters |
-| PCA | Dimensionality reduction for visualization | 2D projection |
 
----
+## Strategy Recommendations
 
-## 💡 Strategy Recommendations
+1. **Sentiment-aware sizing** — Scale position sizes based on the current Fear/Greed regime, with larger allocations during historically favorable conditions
+2. **Contrarian entries** — Use extreme fear readings as potential buying opportunities, as the data supports higher average returns for contrarian traders
+3. **Track momentum, not just levels** — Changes in sentiment direction appear to be a leading indicator for trade outcomes
+4. **Tighter risk management during transitions** — PnL variance increases during sentiment regime changes, suggesting tighter stops are warranted
 
-1. **Sentiment-Aware Sizing**: Dynamically adjust position sizes based on Fear/Greed regime
-2. **Contrarian Opportunities**: Increase buying during extreme fear for asymmetric returns
-3. **Momentum Following**: Track FG direction changes as leading indicators
-4. **Risk Management**: Tighten stops during sentiment transitions (elevated volatility)
-5. **Temporal Optimization**: Identify optimal trading hours for execution quality
 
----
+## Tech Stack
 
-## 🛠️ Tech Stack
-
-- **Python 3.10+** — Core analysis
-- **Pandas & NumPy** — Data manipulation
-- **Matplotlib & Seaborn** — Statistical visualization
-- **Scikit-learn** — K-Means clustering & PCA
-- **SciPy** — Statistical testing (ANOVA, Chi-squared)
-- **Chart.js** — Interactive web dashboard
-- **HTML5/CSS3** — Dashboard UI with glassmorphism design
-
----
-
-## 📧 Contact
-
-**Junior Data Scientist – Trader Behavior Insights**
-
----
-
-*Built for the PrimeTradeAI hiring assessment — March 2026*
+- Python (pandas, numpy, matplotlib, seaborn, scikit-learn, scipy)
+- HTML/CSS/JavaScript with Chart.js for the interactive dashboard
